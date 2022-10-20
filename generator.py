@@ -8,8 +8,11 @@ from numpy.random import normal
 
 
 def main():
+    PROPERTIES_FILE = "generator.properties"
+    CLIENT_NAMES_FILE = "fake_client_names.txt"
+
     config_reader = ConfigParser()
-    config_reader.read("generator.properties")
+    config_reader.read(PROPERTIES_FILE)
     config = {
         "clients-amount": int(config_reader.get("DEFAULT", "clients-amount")),
         "N": int(config_reader.get("DEFAULT", "messages-amount")),
@@ -19,7 +22,9 @@ def main():
         "kafka.topic": config_reader.get("kafka", "topic"),
     }
 
-    clients = [Faker().unique.name() for _ in range(config["clients-amount"])]
+    clients = []
+    with open(CLIENT_NAMES_FILE, "r") as file:
+        clients = file.read().splitlines()
 
     producer = KafkaProducer(bootstrap_servers=[config["kafka.bootstrap-server"]])
 
