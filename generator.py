@@ -2,14 +2,13 @@ from configparser import ConfigParser
 from datetime import datetime
 from random import choice
 
-from faker import Faker
 from kafka import KafkaProducer
 from numpy.random import normal
 
 
 def main():
     PROPERTIES_FILE = "generator.properties"
-    CLIENT_NAMES_FILE = "fake_client_names.txt"
+    CLIENT_FILE = "clients.txt"
 
     config_reader = ConfigParser()
     config_reader.read(PROPERTIES_FILE)
@@ -23,7 +22,7 @@ def main():
     }
 
     clients = []
-    with open(CLIENT_NAMES_FILE, "r") as file:
+    with open(CLIENT_FILE, "r") as file:
         clients = file.read().splitlines()
 
     producer = KafkaProducer(bootstrap_servers=[config["kafka.bootstrap-server"]])
